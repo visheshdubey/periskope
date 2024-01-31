@@ -1,5 +1,5 @@
 "use client";
-import { ChevronsUpDown } from "lucide-react";
+import { Bell, ChevronsUpDown, HelpCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -23,8 +23,41 @@ interface MenuItem {
   icon: JSX.Element; // Assuming JSX.Element is the type for React icons
 }
 
-function filterMenuItems(menuItems: MenuItem[], targetTo: string): MenuItem {
-  return menuItems.filter((item) => item.to === targetTo)[0];
+// function filterMenuItems(menuItems: MenuItem[], targetTo: string): MenuItem {
+//   if (targetTo.toLowerCase().startsWith("/dashboard")) return menuItems[0];
+//   else {
+//     return menuItems.filter(
+//       (item) =>
+//         targetTo.toLowerCase().startsWith(item.to) && item.name !== "Dashboard"
+//     )[0];
+//   }
+// }
+function filterMenuItems(
+  menuItems: MenuItem[],
+  targetTo: string
+): MenuItem | undefined {
+  const normalizedTargetTo = targetTo.toLowerCase();
+
+  if (
+    normalizedTargetTo.endsWith("/dashboard") ||
+    normalizedTargetTo.endsWith("/dashboard/")
+  ) {
+    return menuItems.find((item) => item.to === "/dashboard");
+  } else {
+    // Check if any group is active
+    const groupItem = menuItems.find(
+      (item) => normalizedTargetTo.startsWith(item.to) && item.name === "Groups"
+    );
+
+    if (groupItem) {
+      return groupItem;
+    } else {
+      return menuItems.find(
+        (item) =>
+          normalizedTargetTo.startsWith(item.to) && item.name !== "Dashboard"
+      );
+    }
+  }
 }
 const routes: MenuItem[] = [
   {
@@ -156,14 +189,33 @@ export default function RootLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col grow">
-        <div className="flex justify-between w-full border p-2">
+      <div className="flex flex-col grow max-h-screen h-screen">
+        <div className="flex min-h-10 h-10 text-muted-foreground justify-between w-full border-b p-2">
           <div className="flex gap-1 text-xs items-center">
-            <span>{filterMenuItems(routes, currentRoute).icon}</span>
-            {filterMenuItems(routes, currentRoute).name}
+            <span>{filterMenuItems(routes, currentRoute)?.icon}</span>
+            {filterMenuItems(routes, currentRoute)?.name}
           </div>
-          <div className="flex gap-4">
-            <Button variant={"outline"}>Docs</Button>
+          <div className="flex  gap-4">
+            <Button
+              variant={"outline"}
+              className="flex  text-xs items-center gap-2 px-2 py-1 h-fit"
+            >
+              <HelpCircle size={14} />
+              Docs
+            </Button>
+            <Button
+              variant={"outline"}
+              className="flex text-xs items-center gap-2 px-2 py-1 h-fit"
+            >
+              <div className="flex w-4 h-4  relative items-center  justify-center  rounded-full">
+                <div className="w-2.5 h-2.5 blur-sm bg-primary/80 rounded shadow-3xl absolute"></div>
+                <div className="w-2 h-2 bg-primary rounded shadow-2xl absolute"></div>
+              </div>
+              +91 8840224036
+            </Button>
+            <Button variant={"outline"} size={"icon"} className="p-0 h-full">
+              <Bell size={14} />
+            </Button>
           </div>
         </div>
         <div className="flex grow bg-[#F9FAFB]">{children}</div>

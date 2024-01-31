@@ -1,5 +1,5 @@
 const page = () => {
-  return <div>Groups</div>;
+  return <></>;
 };
 
 export default page;

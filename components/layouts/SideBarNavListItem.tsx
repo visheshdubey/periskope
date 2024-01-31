@@ -22,7 +22,7 @@ const SideBarNavListItem = ({
 
   const linkClasses = cn(
     className,
-    "flex gap-4 hover:bg-secondary hover:text-primary cursor-pointer py-1.5 px-2 rounded-md transition-colors ease-in-out duration-150 items-center",
+    "flex gap-4 hover:bg-secondary hover:text-primary cursor-pointer py-1.5 px-2 rounded-lg transition-colors ease-in-out duration-150 items-center",
     "text-secondary-foreground",
     isActive && "bg-secondary text-primary font-semibold"
   );
