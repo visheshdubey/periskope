@@ -11,5 +11,50 @@ datasource db {
 }
 
 model Project {
-  id Int @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  Groups     Group[]
+}
+
+model Group {
+  id                         Int                  @id @default(autoincrement())
+  name                       String
+  avatar                     String?
+  lastActive                 DateTime?
+  project                    Project              @relation(fields: [projectId], references: [id])
+  unreadMessageCount         Int                  @default(0)
+  isDisapperingMessageActive Boolean              @default(false)
+  sendMessageProvision       SendMessageProvision @default(ALL)
+  created_at                 DateTime             @default(now())
+  updated_at                 DateTime?            @updatedAt
+  projectId                  Int
+  Members                    Member[]
+  Labels                     Label[]
+}
+
+model Member {
+  id         Int       @id @default(autoincrement())
+  name       String
+  phone      BigInt
+  group      Group     @relation(fields: [groupsId], references: [id])
+  avatar     String?
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  groupsId   Int
+}
+
+model Label {
+  id         Int       @id @default(autoincrement())
+  name       String
+  group      Group     @relation(fields: [groupsId], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  groupsId   Int
+}
+
+enum SendMessageProvision {
+  ALL
+  ONLY_ADMINS
 }
