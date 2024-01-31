@@ -15,6 +15,7 @@ import { TableData } from "@/types/Table";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
+import NumberChip from "../widgets/NumberChip";
 
 const data = [
   "",
@@ -211,9 +212,7 @@ const DataTable = ({
                   </AvatarFallback>
                 </Avatar>
                 {`TeamWorkz <> Periskope`}
-                <div className="bg-green-600 rounded-full w-[18px] h-[18px] text-primary-foreground text-[0.575rem] flex items-center justify-center p-1.5">
-                  12
-                </div>
+                <NumberChip value={18} />
               </div>
             </TableCell>
             <TableCell className="py-2">

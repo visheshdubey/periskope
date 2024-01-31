@@ -35,7 +35,7 @@ const page = () => {
   return (
     <div
       className=" w-3/12  max-w-sm border-l "
-      style={{ height: "calc(100vh - 2.5rem);" }}
+      style={{ height: "calc(100vh - 2.5rem)" }}
     >
       <ScrollArea className={"h-full bg-white"}>
         <div className="flex w-full flex-col  h-full mb-12 ">
@@ -63,19 +63,19 @@ const page = () => {
             <TabsList className="bg-white border-b border-b-gray-200 w-full flex justify-start gap-2 px-6 py-0">
               <TabsTrigger
                 value="overview"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm  data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
+                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
               >
                 Overview
               </TabsTrigger>
               <TabsTrigger
                 value="members"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm  data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
+                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
               >
                 Members
               </TabsTrigger>
               <TabsTrigger
                 value="logs"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm  data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
+                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
               >
                 Logs
               </TabsTrigger>

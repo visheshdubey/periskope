@@ -3,7 +3,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 1024 1024"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -18,7 +18,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 16 16"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -33,7 +33,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 20 20"
       aria-hidden="true"
       className="mr-1 h-4 w-4 shrink-0"
@@ -48,7 +48,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 24 24"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -63,7 +63,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 24 24"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -79,7 +79,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 512 512"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -94,7 +94,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 16 16"
       className="mr-1 h-4 w-4 shrink-0"
       aria-hidden="true"
@@ -109,7 +109,7 @@ export const Icons = {
     <svg
       stroke="currentColor"
       fill="currentColor"
-      stroke-width="0"
+      strokeWidth="0"
       viewBox="0 0 512 512"
       className="mr-1 h-4 w-4 shrink-0 text-green-700"
       aria-hidden="true"
