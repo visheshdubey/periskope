@@ -10,11 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               Int       @id @default(autoincrement())
+  name             String
+  phone            BigInt
+  avatar           String?
+  isPhoneConnected Boolean   @default(false)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime? @updatedAt
+  projects         Project[]
+  projectId        Int?
+  Member           Member[]
+}
+
 model Project {
   id         Int       @id @default(autoincrement())
   name       String
+  color      String    @default("text-blue-600")
+  bgColor    String    @default("text-blue-50")
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
+  users      User[]
   Groups     Group[]
 }
 
@@ -23,6 +39,7 @@ model Group {
   name                       String
   avatar                     String?
   lastActive                 DateTime?
+  unreadMessages             Int                  @default(0)
   project                    Project              @relation(fields: [projectId], references: [id])
   unreadMessageCount         Int                  @default(0)
   isDisapperingMessageActive Boolean              @default(false)
@@ -32,22 +49,35 @@ model Group {
   projectId                  Int
   Members                    Member[]
   Labels                     Label[]
+  Tickets                    Tickets[]
+}
+
+model Tickets {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  group      Group     @relation(fields: [groupId], references: [id])
+  groupId    Int
 }
 
 model Member {
   id         Int       @id @default(autoincrement())
   name       String
   phone      BigInt
+  raisedBy   User      @relation(fields: [userId], references: [id])
   group      Group     @relation(fields: [groupsId], references: [id])
   avatar     String?
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
   groupsId   Int
+  userId     Int
 }
 
 model Label {
   id         Int       @id @default(autoincrement())
   name       String
+  color      String    @default("gray")
   group      Group     @relation(fields: [groupsId], references: [id])
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
