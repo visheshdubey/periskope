@@ -1,6 +1,6 @@
 "use client";
+import { UsersRound } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useQuery } from "react-query";
 
 import {
   Table,
@@ -11,150 +11,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { user } from "@/service";
-import { TableData } from "@/types/Table";
+import { GroupsColumn } from "@/data";
+import formatDateTime, { cn } from "@/lib/utils";
+import { Group } from "@/types/Group";
 
-import Spinner from "../Spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ScrollArea } from "../ui/scroll-area";
+import Label from "../widgets/Label";
 import NumberChip from "../widgets/NumberChip";
+import TrueColorChip from "../widgets/TrueColorChip";
 
-const data = [
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-];
 const DataTable = ({
   tableData,
   columns,
 }: {
-  tableData: any[];
-  columns: string[];
+  tableData: Group[];
+  columns: GroupsColumn;
 }) => {
   const router = useRouter();
   const path = usePathname();
-  // const groupsRes = useQuery(["groups"], () => queryFn);
   return (
     <Table className=" mb-12 min-w-screen-lg ">
       <TableHeader className="bg-white text-[0.85rem] font-medium shadow-sm w-full ">
@@ -172,11 +46,12 @@ const DataTable = ({
               key={`column-header-item-${index}`}
               className={cn(
                 columns.length === index + 1 && "text-end",
-                "h-fit"
+                "h-fit",
+                item.className
               )}
               scope="col"
             >
-              {item}
+              {item.name}
             </TableHead>
           ))}
         </TableRow>
@@ -184,14 +59,14 @@ const DataTable = ({
       <TableBody className="bg-white">
         {tableData?.map((item, index) => (
           <TableRow
-            key={`table-row-key-${index}`}
+            key={`table-row-key-${item.id}`}
             className={cn(
               "hover:bg-gray-200/50 border-0  transition-colors ease-in-out duration-200  cursor-pointer ",
-              path.toLowerCase().startsWith(`/dashboard/groups/${index}`) &&
+              path.toLowerCase().startsWith(`/dashboard/groups/${item.id}`) &&
                 "bg-gray-200/50"
             )}
             onClick={() =>
-              router.push(`/dashboard/groups/${index}`, { scroll: false })
+              router.push(`/dashboard/groups/${item.id}`, { scroll: false })
             }
           >
             <TableCell className="font-medium py-2 h-4  ">
@@ -208,11 +83,11 @@ const DataTable = ({
                 <Avatar className=" h-8 w-8">
                   <AvatarImage
                     className="rounded"
-                    src={"https://github.com/visheshdubey.png"}
+                    src={item.avatar}
                     alt=""
                   ></AvatarImage>
-                  <AvatarFallback className=" bg-muted text-xs  font-bold">
-                    v
+                  <AvatarFallback className=" bg-muted text-xs text-gray-500  font-bold">
+                    <UsersRound size={12} />
                   </AvatarFallback>
                 </Avatar>
                 {item.name}
@@ -220,25 +95,31 @@ const DataTable = ({
               </div>
             </TableCell>
             <TableCell className="py-2">
-              <span className="bg-blue-50 text-blue-500 font-semibold px-2.5 py-1 rounded-full text-xs">
-                # Demo
-              </span>
+              <TrueColorChip
+                bg={item.project.bgColor}
+                text={item.project.color}
+              >
+                #{item.project.name}
+              </TrueColorChip>
             </TableCell>
             <TableCell className="gap-1 flex h-4  py-2">
-              <div className="flex items-center gap-1.5 border shadow-sm bg-white px-3 py-3 font-medium text-xs rounded-full">
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                Team 1
-              </div>
-              <div className="flex items-center gap-1.5 border shadow-sm bg-white px-3 py-3 font-medium text-xs rounded-full">
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                Team 2
-              </div>
-              <div className="flex items-center gap-1.5 border shadow-sm bg-white px-1.5 py-3 font-medium text-xs rounded-full">
-                + 3
-              </div>
+              {item.Labels.slice(0, 2).map((items) => (
+                <Label
+                  color={items.color}
+                  name={items.name}
+                  key={items.id + items.name + item.id}
+                />
+              ))}
+              {item.Labels.length > 2 && (
+                <Label name={`+${item.Labels.length - 2}`} className="w-fit" />
+              )}
             </TableCell>
-            <TableCell className="text-center h-4 py-2 ">1200</TableCell>
-            <TableCell className="text-right h-4  py-2">Yesterday</TableCell>
+            <TableCell className="text-center h-4 py-2 ">
+              {item.memberCount}
+            </TableCell>
+            <TableCell className="text-right h-4  py-2">
+              {item.lastActive && formatDateTime(item.lastActive)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

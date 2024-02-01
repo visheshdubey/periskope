@@ -35,6 +35,10 @@ export async function GET() {
     const groups = await prisma.group.findMany({
       include: {
         Labels: true,
+        project: true,
+      },
+      orderBy: {
+        updated_at: "asc",
       },
     });
 

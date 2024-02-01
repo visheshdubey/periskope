@@ -5,45 +5,44 @@ import { Button } from "../ui/button";
 
 const SecondaryHeader = () => {
   return (
-    <div className="flex w-full p-2  items-center gap-4 justify-between">
-      {/* first half */}
-      <div className="flex gap-4 h-8">
+    <header className="flex w-full p-2 items-center gap-4 justify-between border-b border-gray-200">
+      <nav className="flex gap-4 h-8">
         <div
-          className="flex h-8 max-w-56 items-center flex-1 gap-2 px-4 py-1 rounded-md border border-gray-200 bg-white"
+          className="flex h-full max-w-56 items-center flex-1 gap-2 px-4 py-1 rounded-md border border-gray-200 bg-white"
           role="search"
         >
-          <Search className="stroke-muted-foreground" size={14}></Search>
+          <Search className="stroke-muted-foreground" size={14} />
           <input
             type="text"
             name="search"
-            placeholder="Search "
-            className="w-full bg-transparent active:border-0 text-[14px] outline-none  placeholder-black/50"
+            placeholder="Search"
+            className="w-full bg-transparent active:border-0 text-sm outline-none placeholder-black/50"
             aria-label="Search"
           />
         </div>
         <Button
           variant={"outline"}
           size={"sm"}
-          className="h-8 gap-2 text-xs text-muted-foreground"
+          className="h-8 gap-2 text-sm text-muted-foreground"
         >
           <Filter className="stroke-current" size={10} />
           Filter
         </Button>
-      </div>
-      <div className="flex gap-4">
-        <Button size={"sm"} className="text-xs h-8">
+      </nav>
+      <aside className="flex gap-4">
+        <Button size={"sm"} className="text-sm h-8">
           Bulk message
         </Button>
         <Button
           variant={"outline"}
           size={"sm"}
-          className="h-8 gap-2 text-xs text-muted-foreground"
+          className="h-8 gap-2 text-sm text-muted-foreground"
         >
           Group Actions
           <ChevronsUpDown className="stroke-current" size={14} />
         </Button>
-      </div>
-    </div>
+      </aside>
+    </header>
   );
 };
 

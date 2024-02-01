@@ -7,11 +7,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
-  console.log(params.id);
   const group = await prisma.group.findUnique({
     where: { id: parseInt(id) },
     include: {
       Labels: true,
+      project: true,
     },
   });
   if (group) {

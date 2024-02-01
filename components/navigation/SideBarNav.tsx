@@ -1,12 +1,10 @@
 "use client";
-import { Bell, ChevronsUpDown, HelpCircle } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React, { ReactNode } from "react";
 
 import SideBarNavListItem from "@/components/navigation/SideBarNavListItem";
 import { Icons } from "@/components/theme/Icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { filterMenuItems } from "@/lib/utils";
 import { MenuItem } from "@/types/Menu";
 
 export const routes: MenuItem[] = [
@@ -52,10 +48,12 @@ export const routes: MenuItem[] = [
     icon: <Icons.settings />,
   },
 ];
+
 const SideBarNav = () => {
   const currentRoute = usePathname();
+
   return (
-    <div className="z-50 flex w-56 flex-shrink-0 flex-col gap-2 max-h-screen h-full justify-between overflow-hidden border-r border-gray-200 px-4 shadow-sm">
+    <aside className="z-50 flex w-56 flex-shrink-0 flex-col gap-2 max-h-screen h-full justify-between overflow-hidden border-r border-gray-200 px-4 shadow-sm">
       <DropdownMenu>
         <DropdownMenuTrigger className="w-full " asChild>
           <div className="flex cursor-pointer items-center gap-2 p-2 hover:bg-secondary rounded">
@@ -63,8 +61,8 @@ const SideBarNav = () => {
               <AvatarImage
                 className="rounded"
                 src={"/not_a_pic.png"}
-                alt=""
-              ></AvatarImage>
+                alt="Profile Picture"
+              />
               <AvatarFallback className="rounded-sm bg-primary text-primary-foreground font-bold">
                 T
               </AvatarFallback>
@@ -91,8 +89,8 @@ const SideBarNav = () => {
                 <AvatarImage
                   className="rounded"
                   src={"/not_a_pic.png"}
-                  alt=""
-                ></AvatarImage>
+                  alt="Organization Logo"
+                />
                 <AvatarFallback className="rounded-sm bg-primary text-xs text-primary-foreground font-bold">
                   T
                 </AvatarFallback>
@@ -114,8 +112,8 @@ const SideBarNav = () => {
                 <AvatarImage
                   className="rounded"
                   src={"/not_a_pic.png"}
-                  alt=""
-                ></AvatarImage>
+                  alt="User Profile Picture"
+                />
                 <AvatarFallback className="rounded-full bg-muted text-xs  font-bold">
                   v
                 </AvatarFallback>
@@ -129,22 +127,19 @@ const SideBarNav = () => {
         </DropdownMenuContent>
       </DropdownMenu>
       <div className="flex flex-1  flex-col justify-between">
-        <div className="flex flex-col gap-12">
-          <ul className="flex flex-col text-sm gap-1">
-            {routes.map((item, index) => (
-              <li key={`side-nav-list-item-${index}`}>
-                <SideBarNavListItem item={item} currentRoute={currentRoute} />
-              </li>
-            ))}
-          </ul>
-        </div>
-
+        <ul className="flex flex-col text-sm gap-1">
+          {routes.map((item, index) => (
+            <li key={`side-nav-list-item-${index}`}>
+              <SideBarNavListItem item={item} currentRoute={currentRoute} />
+            </li>
+          ))}
+        </ul>
         <div className="flex gap-4 items-center text-sm mb-4">
           <Icons.whatsapp />
           Help & Support
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

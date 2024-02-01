@@ -1,11 +1,15 @@
 import { TableData } from "@/types/Table";
 
+export type GroupsColumn = {
+  className: string;
+  name: string;
+}[];
 export const tableColumns = [
-  "Group Name",
-  "Project",
-  "Labels",
-  "Members",
-  "Last Active",
+  { className: "", name: "Group Name" },
+  { className: "", name: "Project" },
+  { className: "", name: "Labels" },
+  { className: "text-center", name: "Members" },
+  { className: "text-right", name: "Last Active" },
 ];
 export const tableData: TableData[] = [
   {

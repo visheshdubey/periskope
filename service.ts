@@ -1,3 +1,5 @@
+import { Group } from "@prisma/client";
+
 interface RequestOptions {
   method: string;
   body?: string | FormData;
@@ -31,8 +33,14 @@ const fetchData = async (
 };
 
 export const user = {
-  getGroups: async () => {
+  getGroups: async (): Promise<Group[]> => {
     const url = `${BASE_URL}/group`;
+    return fetchData(url, {
+      method: "GET",
+    });
+  },
+  getGroupById: async (id: string): Promise<Group> => {
+    const url = `${BASE_URL}/group/${id}`;
     return fetchData(url, {
       method: "GET",
     });

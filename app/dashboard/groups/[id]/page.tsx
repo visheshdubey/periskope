@@ -1,37 +1,33 @@
-import {
-  CalendarDays,
-  ChevronsUpDown,
-  Download,
-  Filter,
-  LogOut,
-  MoveLeft,
-  MoveRight,
-  RefreshCcw,
-  Search,
-  Signal,
-  SignalMedium,
-} from "lucide-react";
+"use client";
+import { Download, LogOut, RefreshCcw, UsersRound } from "lucide-react";
+import { useQuery, useQueryClient } from "react-query";
 
-import DataTable from "@/components/tables/DataTable";
-import { Icons } from "@/components/theme/Icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { tableColumns, tableData } from "@/data";
+import Label from "@/components/widgets/Label";
+import TicketCard from "@/components/widgets/TicketCard";
+import TrueColorChip from "@/components/widgets/TrueColorChip";
+import formatDateTime from "@/lib/utils";
+import { user } from "@/service";
+import { Group } from "@/types/Group";
 
-const page = () => {
+const GroupDetailPage = ({ params }: { params: { id: string } }) => {
+  const queryClient = useQueryClient();
+  const { data, ...groupsDetailRes } = useQuery(
+    ["groupsId"],
+    (): Promise<Group> => user.getGroupById(params.id)
+  );
   return (
     <div
       className=" w-3/12  max-w-sm border-l "
@@ -41,23 +37,38 @@ const page = () => {
         <div className="flex w-full flex-col  h-full mb-12 ">
           <div className="flex items-center justify-between w-full  p-6 ">
             <div className="flex items-center gap-4 ">
-              <Avatar className=" h-8 w-8">
-                <AvatarImage
-                  className="rounded"
-                  src={"https://github.com/visheshdubey.png"}
-                  alt=""
-                ></AvatarImage>
-                <AvatarFallback className=" bg-muted text-xs  font-bold">
-                  v
-                </AvatarFallback>
-              </Avatar>
-
-              <span className="text-sm font-semibold truncate w-36 ">{`TeamWorkz <> Periskope`}</span>
+              {groupsDetailRes.isLoading ? (
+                <>
+                  <Skeleton className="w-8 h-8 rounded-full"></Skeleton>
+                  <Skeleton className="w-36 h-4 rounded-full"></Skeleton>
+                </>
+              ) : (
+                <>
+                  <Avatar className=" h-8 w-8">
+                    <AvatarImage
+                      className="rounded"
+                      src={data?.avatar}
+                      alt=""
+                    ></AvatarImage>
+                    <AvatarFallback className=" bg-muted text-xs  font-bold">
+                      <UsersRound size={12} />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-semibold truncate w-36 ">{` ${data?.name}`}</span>
+                </>
+              )}
             </div>
-            <div className="flex gap-1.5 items-center text-gray-400 text-xs">
+            <Button
+              variant={"ghost"}
+              size={"sm"}
+              className="flex rounded-lg gap-1.5 items-center text-gray-400 text-xs"
+              onClick={() => {
+                queryClient.invalidateQueries("groupsId");
+              }}
+            >
               <RefreshCcw size={12} className="stroke-current" />
               Refresh
-            </div>
+            </Button>
           </div>
           <Tabs defaultValue="overview" className="w-full   p-0">
             <TabsList className="bg-white border-b border-b-gray-200 w-full flex justify-start gap-2 px-6 py-0">
@@ -82,126 +93,116 @@ const page = () => {
             </TabsList>
             <TabsContent
               value="overview"
-              className="w-full py-6  flex flex-col gap-6"
+              className="w-full py-6 flex flex-col gap-6"
             >
-              <div className="px-6 gap-2 flex w-full text-sm font-medium">
-                <span className="text-gray-400 w-2/3">Last Active</span>
-                <span className="">03:17</span>
-              </div>
-              <div className="px-6 gap-2 flex w-full text-sm font-medium">
-                <span className="text-gray-400 w-2/3">
+              <section className="px-6 gap-2 flex w-full text-sm font-medium">
+                <span className="text-gray-400 grow">Last Active</span>
+                <span className="w-[120px] truncate">
+                  {data && formatDateTime(data.lastActive)}
+                </span>
+              </section>
+              <section className="px-6 gap-2 grow flex w-full text-sm font-medium">
+                <span className="text-gray-400 grow">
                   Disappearing Messages
                 </span>
-                <span className="">
-                  <Select>
-                    <SelectTrigger className="w-fit h-fit p-0 border-0 active:border-0 outline-none focus-visible:ring-0 ">
-                      <SelectValue placeholder="OFF" className="font-mono" />
-                    </SelectTrigger>
-                    <SelectContent className="w-fit">
-                      <SelectItem value="on">ON</SelectItem>
-                      <SelectItem value="off">OFF</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </span>
-              </div>
-              <div className="px-6 gap-2 flex w-full text-[0.85rem] font-medium">
+                <Select value={data?.isDisapperingMessageActive ? "on" : "off"}>
+                  <SelectTrigger className=" w-[120px] h-fit p-0 border-0 active:border-0 outline-none focus-visible:ring-0">
+                    <SelectValue placeholder="OFF" className="font-mono" />
+                  </SelectTrigger>
+                  <SelectContent className="w-fit">
+                    <SelectItem value="on">ON</SelectItem>
+                    <SelectItem value="off">OFF</SelectItem>
+                  </SelectContent>
+                </Select>
+              </section>
+              <section className="px-6 gap-2 grow flex w-full text-[0.85rem] font-medium">
                 <span className="text-gray-400 w-4/6">
                   Send Message Permission
                 </span>
-                <span className="">
-                  <Select>
-                    <SelectTrigger className="w-fit h-fit p-0 border-0 active:border-0 outline-none focus-visible:ring-0 ">
-                      <SelectValue placeholder="All" className="font-mono" />
-                    </SelectTrigger>
-                    <SelectContent className="w-fit">
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="only_admins">Only Admins</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <Select>
+                  <SelectTrigger className=" w-[120px]  h-fit p-0 border-0 active:border-0 outline-none focus-visible:ring-0">
+                    <SelectValue placeholder="All" className="font-mono" />
+                  </SelectTrigger>
+                  <SelectContent className="w-fit">
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="only_admins">Only Admins</SelectItem>
+                  </SelectContent>
+                </Select>
+              </section>
+              <section className="px-6 gap-2 grow flex w-full text-sm font-medium">
+                <span className="text-gray-400 grow">Project</span>
+                <span className="w-[120px]">
+                  {data && (
+                    <TrueColorChip
+                      bg={data.project.bgColor}
+                      text={data.project.color}
+                    >
+                      #{data.project.name}
+                    </TrueColorChip>
+                  )}
                 </span>
-              </div>
-              <div className="px-6 gap-2 flex w-full text-sm font-medium">
-                <span className="text-gray-400 w-4/6">Project</span>
-                <span className="bg-blue-50 text-blue-500 font-semibold px-2.5 py-1 rounded-full text-xs">
-                  # Demo
-                </span>
-              </div>
-              <div className="px-6 gap-2 flex w-full text-sm font-medium">
-                <span className="text-gray-400 w-4/6">Lables</span>
-                <span className="flex flex-col gap-1">
-                  <div className="w-fit flex items-center gap-1.5 border shadow-sm bg-white px-3 py-1 font-medium text-xs rounded-full">
-                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                    Team 1
-                  </div>
-                  <div className="w-fit flex items-center gap-1.5 border shadow-sm bg-white px-3 py-1 font-medium text-xs rounded-full">
-                    <span className="w-2 h-2 bg-green-700 rounded-full"></span>
-                    Team 2
-                  </div>
-
-                  <div className="w-fit text-nowrap truncate flex items-center gap-1.5 border text-gray-400 shadow-sm bg-white px-2 py-1  text-xs rounded-full">
-                    + Add Label
-                  </div>
-                </span>
-              </div>
-              <Separator></Separator>
+              </section>
+              <section className="px-6 gap-2 grow flex w-full text-sm font-medium">
+                <span className="text-gray-400 grow">Labels</span>
+                <div className="flex w-[120px] flex-col gap-1">
+                  {data?.Labels?.map((items) => (
+                    <Label
+                      key={items.id + items.name + data?.id}
+                      name={items.name}
+                      color={items.color}
+                      className="px-2 py-1 w-fit  h-fit"
+                    />
+                  ))}
+                  <Label
+                    name={" + Add Label"}
+                    className="px-2 py-1 w-fit  h-fit text-gray-400"
+                  />
+                </div>
+              </section>
+              <Separator />
               <div className="px-6 flex flex-col gap-2 font-medium">
-                <div className="flex gap-2 text-sm text-gray-600 items-center">
+                <Button
+                  variant={"ghost"}
+                  className="flex gap-2 w-fit py-[2px] px-2 text-sm text-gray-600 items-center"
+                >
                   <Download size={14} className="stroke-current" /> Export Chat
-                </div>
-                <div className="flex gap-2 text-sm text-red-500 items-center ">
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  className="flex gap-2 w-fit py-[2px] px-2 hover:bg-destructive hover:text-destructive-foreground text-sm text-red-500 items-center "
+                >
                   <LogOut size={14} className="stroke-current" /> Exit Group
-                </div>
+                </Button>
               </div>
-
-              <div
-                className="mx-6 flex flex-col  p-2.5 bg-white rounded-lg  gap-2"
-                style={{
-                  boxShadow: "0px 2px 25px 0px rgba(26, 24, 30, 0.1)",
-                }}
-              >
-                <div className="flex text-sm items-center justify-between">
-                  <span className="text-gray-400 text-[0.75rem]">
-                    {`PER-011 | Evoke <> Skope`}
-                  </span>
-                  <Avatar className=" h-5 w-5">
-                    <AvatarImage
-                      className="rounded"
-                      src={"https://github.com/visheshdubey_.png"}
-                      alt=""
-                    ></AvatarImage>
-                    <AvatarFallback className=" bg-indigo-400 text-[0.7rem] text-primary-foreground ">
-                      H
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <span className="font-semibold text-sm">
-                  ⭕ Issues with mentions on groups
-                </span>
-                <div className="flex justify-between items-center text-[0.6rem] leading-[0.7rem]">
-                  <div className="flex gap-2">
-                    <span className="p-1  border rounded-md  flex gap-1 items-center ">
-                      <Signal size={9.6} className="" />
-                    </span>
-                    <span className="px-1  border rounded-md  flex gap-1 items-center">
-                      <div className=" aspect-square  rounded-full">
-                        <CalendarDays
-                          size={9.6}
-                          className="stroke-fuchsia-600"
-                        />
-                      </div>
-                      <span className="pt-[1.5px]"> Dec 22</span>
-                    </span>
-                    <span className="px-1  border rounded-md  flex gap-1 items-center">
-                      <div className="w-1.5 aspect-square bg-gray-800 rounded-full"></div>
-                      <span className="pt-[1.5px]"> client</span>
-                    </span>
-                  </div>
-                  <span className="text-[0.6rem] text-gray-400">3 days</span>
-                </div>
-              </div>
+              {parseInt(params.id) % 2 === 0 && (
+                <TicketCard
+                  data={{
+                    id: "PER-011 | Evoke <> Skope",
+                    title: "⭕ Issues with mentions on groups",
+                    subtitle: "Subtitle",
+                    avatarSrc: "https://github.com/visheshdubey_.png",
+                    avatarFallbackText: "H",
+                    signalColor: "red",
+                    calendarDate: "Dec 22",
+                    additionalInfo: "client",
+                    duration: "3 days",
+                  }}
+                />
+              )}
             </TabsContent>
-            <TabsContent value="members">
-              Change your password here.
+            <TabsContent
+              value="members"
+              className="w-full py-6 flex flex-col gap-6"
+            >
+              <div className="px-6">Change your password here.</div>
+            </TabsContent>
+            <TabsContent
+              value="logs"
+              className="w-full grow py-6 flex flex-col gap-6"
+            >
+              <div className="px-6 text-xs text-center">
+                Group logs appear here!
+              </div>
             </TabsContent>
           </Tabs>
         </div>
@@ -210,4 +211,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default GroupDetailPage;
