@@ -38,7 +38,7 @@ export async function GET() {
         project: true,
       },
       orderBy: {
-        updated_at: "asc",
+        lastActive: "desc",
       },
     });
 
