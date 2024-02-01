@@ -4,7 +4,7 @@ interface RequestOptions {
   method: string;
   body?: string | FormData;
 }
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "/api";
 const fetchData = async (
   url: string,
   options: RequestOptions,
