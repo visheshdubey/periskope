@@ -1,5 +1,5 @@
 "use client";
-import { Download, LogOut, RefreshCcw, UsersRound } from "lucide-react";
+import { Download, LogOut, RefreshCcw, User, UsersRound } from "lucide-react";
 import { useQuery, useQueryClient } from "react-query";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,12 +21,17 @@ import TrueColorChip from "@/components/widgets/TrueColorChip";
 import formatDateTime from "@/lib/utils";
 import { user } from "@/service";
 import { Group } from "@/types/Group";
+import { faker } from "@faker-js/faker";
 
 const GroupDetailPage = ({ params }: { params: { id: string } }) => {
   const queryClient = useQueryClient();
   const { data, ...groupsDetailRes } = useQuery(
     ["groupsId"],
     (): Promise<Group> => user.getGroupById(params.id)
+  );
+  const memebers = Array.from(
+    { length: data?.memberCount || 0 },
+    (_, index) => index
   );
   return (
     <div
@@ -115,8 +120,8 @@ const GroupDetailPage = ({ params }: { params: { id: string } }) => {
                   </SelectContent>
                 </Select>
               </section>
-              <section className="px-6 gap-2 grow flex w-full text-[0.85rem] font-medium">
-                <span className="text-gray-400 w-4/6">
+              <section className="px-6 gap-2 grow flex  text-[0.85rem] font-medium">
+                <span className="text-gray-400 grow">
                   Send Message Permission
                 </span>
                 <Select>
@@ -192,9 +197,33 @@ const GroupDetailPage = ({ params }: { params: { id: string } }) => {
             </TabsContent>
             <TabsContent
               value="members"
-              className="w-full py-6 flex flex-col gap-6"
+              className="w-full -mt-6 pt-0 flex flex-col gap-2"
             >
-              <div className="px-6">Change your password here.</div>
+              {memebers.slice(0, 200).map((_, index) => (
+                <div
+                  key={`member-array-${index}`}
+                  className="flex items-center gap-4 px-2 hover:bg-gray-400/20 mx-6 py-2 rounded-lg cursor-pointer"
+                >
+                  <Avatar className=" h-10 w-10">
+                    <AvatarImage
+                      className="rounded"
+                      src={faker.image.avatar()}
+                      alt=""
+                    ></AvatarImage>
+                    <AvatarFallback className=" bg-muted text-xs  font-bold">
+                      <User size={12} />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm font-medium">
+                      {faker.person.fullName()}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {faker.phone.number()}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </TabsContent>
             <TabsContent
               value="logs"
