@@ -33,6 +33,8 @@ const GroupDetailPage = ({ params }: { params: { id: string } }) => {
     { length: data?.memberCount || 0 },
     (_, index) => index
   );
+  const customTabTriggerClass = `data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm
+   data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2`;
   return (
     <div
       className=" w-3/12  max-w-sm border-l "
@@ -77,22 +79,13 @@ const GroupDetailPage = ({ params }: { params: { id: string } }) => {
           </div>
           <Tabs defaultValue="overview" className="w-full   p-0">
             <TabsList className="bg-white border-b border-b-gray-200 w-full flex justify-start gap-2 px-6 py-0">
-              <TabsTrigger
-                value="overview"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
-              >
+              <TabsTrigger value="overview" className={customTabTriggerClass}>
                 Overview
               </TabsTrigger>
-              <TabsTrigger
-                value="members"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
-              >
+              <TabsTrigger value="members" className={customTabTriggerClass}>
                 Members
               </TabsTrigger>
-              <TabsTrigger
-                value="logs"
-                className="data-[state=active]:border-b h-full data-[state=active]:text-primary data-[state=active]:font-medium text-sm data-[state=active]:shadow-none data-[state=active]:bg-transparent border-primary px-2"
-              >
+              <TabsTrigger value="logs" className={customTabTriggerClass}>
                 Logs
               </TabsTrigger>
             </TabsList>
@@ -124,7 +117,11 @@ const GroupDetailPage = ({ params }: { params: { id: string } }) => {
                 <span className="text-gray-400 grow">
                   Send Message Permission
                 </span>
-                <Select>
+                <Select
+                  value={
+                    data?.sendMessageProvision === "ALL" ? "all" : "only_admins"
+                  }
+                >
                   <SelectTrigger className=" w-[120px]  h-fit p-0 border-0 active:border-0 outline-none focus-visible:ring-0">
                     <SelectValue placeholder="All" className="font-mono" />
                   </SelectTrigger>
