@@ -1,3 +1,4 @@
+"use client";
 import {
   CalendarDays,
   ChevronsUpDown,
@@ -12,8 +13,10 @@ import {
   SignalMedium,
 } from "lucide-react";
 import { ReactNode } from "react";
+import { useQuery } from "react-query";
 
 import SecondaryHeader from "@/components/headers/SecondaryHeader";
+import Spinner from "@/components/Spinner";
 import DataTable from "@/components/tables/DataTable";
 import TableSection from "@/components/tables/TableSection";
 import { Icons } from "@/components/theme/Icons";
@@ -33,14 +36,24 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tableColumns, tableData } from "@/data";
+import { user } from "@/service";
 
 const GroupLayout = ({ children }: { children: ReactNode }) => {
+  const groupsRes = useQuery(["groups"], () => user.getGroups());
   return (
     <div className="flex w-full h-full transition-all ease-in-out">
       <div className="flex grow flex-col">
         <SecondaryHeader />
         <TableSection>
-          <DataTable tableData={tableData} columns={tableColumns}></DataTable>
+          <DataTable
+            tableData={groupsRes.data}
+            columns={tableColumns}
+          ></DataTable>
+          {groupsRes.isLoading && (
+            <div className="flex grow  items-center absolute  w-full justify-center">
+              <Spinner size={"large"}></Spinner>
+            </div>
+          )}
           {/* Pagination */}
           <div className="flex gap-2 items-center bg-white border-t shadow-sm px-4 py-2 absolute bottom-0 w-full  z-50">
             <Button size={"icon"} variant={"outline"} className="w-8 h-6">

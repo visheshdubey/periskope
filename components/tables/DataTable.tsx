@@ -1,5 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
+import { useQuery } from "react-query";
 
 import {
   Table,
@@ -11,8 +12,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { user } from "@/service";
 import { TableData } from "@/types/Table";
 
+import Spinner from "../Spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
 import NumberChip from "../widgets/NumberChip";
@@ -146,13 +149,14 @@ const DataTable = ({
   tableData,
   columns,
 }: {
-  tableData: TableData[];
+  tableData: any[];
   columns: string[];
 }) => {
   const router = useRouter();
   const path = usePathname();
+  // const groupsRes = useQuery(["groups"], () => queryFn);
   return (
-    <Table className="mb-12 min-w-screen-lg">
+    <Table className=" mb-12 min-w-screen-lg ">
       <TableHeader className="bg-white text-[0.85rem] font-medium shadow-sm w-full ">
         <TableRow>
           <TableHead className="w-4 py-2 h-fit">
@@ -178,7 +182,7 @@ const DataTable = ({
         </TableRow>
       </TableHeader>
       <TableBody className="bg-white">
-        {data.map((item, index) => (
+        {tableData?.map((item, index) => (
           <TableRow
             key={`table-row-key-${index}`}
             className={cn(
@@ -211,8 +215,8 @@ const DataTable = ({
                     v
                   </AvatarFallback>
                 </Avatar>
-                {`TeamWorkz <> Periskope`}
-                <NumberChip value={18} />
+                {item.name}
+                <NumberChip value={item.unreadMessageCount} />
               </div>
             </TableCell>
             <TableCell className="py-2">

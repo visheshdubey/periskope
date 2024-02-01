@@ -10,20 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id               Int       @id @default(autoincrement())
-  name             String
-  phone            String
-  email            String?
-  avatar           String?
-  isPhoneConnected Boolean   @default(false)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime? @updatedAt
-  projects         Project[]
-  projectId        Int?
-  Member           Member[]
-}
-
 model Project {
   id         Int       @id @default(autoincrement())
   name       String
@@ -31,15 +17,14 @@ model Project {
   bgColor    String    @default("text-blue-50")
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
-  users      User[]
-  Groups     Group[]
+  groups     Group[]
 }
 
 model Group {
   id                         Int                  @id @default(autoincrement())
   name                       String
   avatar                     String?
-  lastActive                 DateTime?
+  lastActive                 DateTime?            @default(now())
   unreadMessages             Int                  @default(0)
   project                    Project              @relation(fields: [projectId], references: [id])
   unreadMessageCount         Int                  @default(0)
@@ -48,41 +33,17 @@ model Group {
   created_at                 DateTime             @default(now())
   updated_at                 DateTime?            @updatedAt
   projectId                  Int
-  Members                    Member[]
+  memberCount                Int                  @default(0)
   Labels                     Label[]
-  Tickets                    Tickets[]
-}
-
-model Tickets {
-  id         Int       @id @default(autoincrement())
-  name       String
-  created_at DateTime  @default(now())
-  updated_at DateTime? @updatedAt
-  group      Group     @relation(fields: [groupId], references: [id])
-  groupId    Int
-}
-
-model Member {
-  id         Int       @id @default(autoincrement())
-  name       String
-  phone      String
-  raisedBy   User      @relation(fields: [userId], references: [id])
-  group      Group     @relation(fields: [groupsId], references: [id])
-  avatar     String?
-  created_at DateTime  @default(now())
-  updated_at DateTime? @updatedAt
-  groupsId   Int
-  userId     Int
 }
 
 model Label {
   id         Int       @id @default(autoincrement())
   name       String
   color      String    @default("gray")
-  group      Group     @relation(fields: [groupsId], references: [id])
+  group      Group[]
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
-  groupsId   Int
 }
 
 enum SendMessageProvision {
